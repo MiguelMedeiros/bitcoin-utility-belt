@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Bitcoin Utility Belt - Encrypt and Decrypt Wallets - Examples</title>
+	</head>
+	<body>
+
+		<script src="../dist/bitcoin-utility-belt.js"></script>
+		<script>
+			// create a random wallet
+			var wallet = belt.createWallet();
+			console.log(wallet.address);
+			console.log(wallet.privateKey);
+
+			// encrypt wallet (bip38)
+			var encryptedWallet = belt.bip38Encrypt(wallet.privateKey, "passphrase");
+			console.log(encryptedWallet);
+
+			// decrypt wallet (bip38)
+			// last parameter is the console status, change it to 'true' to print the status
+			var decryptedWallet = belt.bip38Decrypt(encryptedWallet, "passphrase", false);
+			console.log(decryptedWallet);
+		</script>
+	</body>
+</html>

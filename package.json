@@ -1,0 +1,26 @@
+{
+  "name": "bitcoin-utility-belt",
+  "version": "1.0.0",
+  "repository": "github:MiguelMedeiros/bitcoin-utility-belt",
+  "license": "MIT",
+  "author": "Miguel Medeiros",
+  "email": "miguel@miguelmedeiros.com.br",
+  "url": "http://www.miguelmedeiros.com.br/",
+  "private": true,
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "build": "browserify app.js > dist/bitcoin-utility-belt.js"
+  },
+  "dependencies": {
+    "bigi": "^1.4.2",
+    "bip38": "^2.0.2",
+    "bitcoinjs-lib": "^3.3.2",
+    "bitcoinjs-message": "^2.0.0",
+    "safe-buffer": "^5.1.2",
+    "wif": "^2.0.6"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.2"
+  }
+}

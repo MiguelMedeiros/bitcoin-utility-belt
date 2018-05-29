@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build": "browserify app.js > dist/bitcoin-utility-belt.js"
+    "build": "browserify app.js --standalone belt > dist/bitcoin-utility-belt.js"
   },
   "dependencies": {
     "bigi": "^1.4.2",
@@ -21,6 +21,7 @@
     "wif": "^2.0.6"
   },
   "devDependencies": {
-    "browserify": "^16.2.2"
+    "browserify": "^16.2.2",
+    "uglify-js": "^3.3.27"
   }
 }

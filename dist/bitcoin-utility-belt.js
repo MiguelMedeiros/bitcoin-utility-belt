@@ -1,4 +1,4 @@
-(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.belt = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 // import libs
 var bitcoin = require('bitcoinjs-lib');
 var bitcoinMessage = require('bitcoinjs-message');
@@ -8,29 +8,34 @@ var bigi = require('bigi');
 var safeBuffer = require('safe-buffer').Buffer;
 
 var createWallet = function (type = 'default', testnet = false){
+	try{
+		// check network: bitcoin or testnet
+		let network;
+		if(testnet){
+			network = bitcoin.networks.testnet;
+		}else{
+			network = bitcoin.networks.bitcoin;
+		}
 
-	// check network: bitcoin or testnet
-	let network;
-	if(testnet){
-		network = bitcoin.networks.testnet;
-	}else{
-		network = bitcoin.networks.bitcoin;
+		// choosing wallet
+		let wallet;
+		let keyPair;
+		switch (type){
+			default:
+				// create new random key pair of eliptic curves
+				keyPair = bitcoin.ECPair.makeRandom({network: network});
+
+				// return wallet
+				wallet = {
+			    	"address": keyPair.getAddress(),
+			    	"privateKey": keyPair.toWIF()
+			    };
+			    return wallet;
+		}
 	}
-
-	// choosing wallet
-	let wallet;
-	let keyPair;
-	switch (type){
-		default:
-			// create new random key pair of eliptic curves
-			keyPair = bitcoin.ECPair.makeRandom({network: network});
-
-			// return wallet
-			wallet = {
-		    	"address": keyPair.getAddress(),
-		    	"privateKey": keyPair.toWIF()
-		    };
-		    return wallet;
+	catch(err){
+		console.log(err);
+		return false;
 	}
 };
 
@@ -154,7 +159,7 @@ var verifyMessage = function (message, address, signature, testnet = false){
 	}
 };
 
-var bit38Encrypt = function(privateKey, passphrase){
+var bip38Encrypt = function(privateKey, passphrase){
 	try{
 		if(privateKey === ""){
 			throw new Error("Invalid private key");
@@ -173,7 +178,7 @@ var bit38Encrypt = function(privateKey, passphrase){
 	}
 };
 
-var bip38Decrypt = function (encryptedKey, passphrase){
+var bip38Decrypt = function (encryptedKey, passphrase, consoleLog = false){
 	try {
 		if(encryptedKey === ""){
 			throw new Error("Invalid encrypted key");
@@ -182,7 +187,9 @@ var bip38Decrypt = function (encryptedKey, passphrase){
 			throw new Error("Invalid passphrase");
 		}
 		var decryptedKey = bip38.decrypt(encryptedKey, passphrase, function (status) {
-	  		console.log((status.percent).toFixed(2));
+			if(consoleLog){
+	  			console.log((status.percent).toFixed(2));
+			}
 		});
 		return wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed);
 	}
@@ -200,7 +207,7 @@ module.exports = {
 	signMessage: signMessage,
 	verifyMessage: verifyMessage,
 	verifyMessage: verifyMessage,
-	bit38Encrypt: bit38Encrypt,
+	bip38Encrypt: bip38Encrypt,
 	bip38Decrypt: bip38Decrypt
 }
 },{"bigi":22,"bip38":24,"bitcoinjs-lib":36,"bitcoinjs-message":65,"safe-buffer":202,"wif":231}],2:[function(require,module,exports){
@@ -31935,4 +31942,5 @@ module.exports = {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"bs58check":98,"buffer":102}]},{},[1]);
+},{"bs58check":98,"buffer":102}]},{},[1])(1)
+});

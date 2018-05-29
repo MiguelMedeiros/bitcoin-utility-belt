@@ -7,29 +7,34 @@ var bigi = require('bigi');
 var safeBuffer = require('safe-buffer').Buffer;
 
 var createWallet = function (type = 'default', testnet = false){
+	try{
+		// check network: bitcoin or testnet
+		let network;
+		if(testnet){
+			network = bitcoin.networks.testnet;
+		}else{
+			network = bitcoin.networks.bitcoin;
+		}
 
-	// check network: bitcoin or testnet
-	let network;
-	if(testnet){
-		network = bitcoin.networks.testnet;
-	}else{
-		network = bitcoin.networks.bitcoin;
+		// choosing wallet
+		let wallet;
+		let keyPair;
+		switch (type){
+			default:
+				// create new random key pair of eliptic curves
+				keyPair = bitcoin.ECPair.makeRandom({network: network});
+
+				// return wallet
+				wallet = {
+			    	"address": keyPair.getAddress(),
+			    	"privateKey": keyPair.toWIF()
+			    };
+			    return wallet;
+		}
 	}
-
-	// choosing wallet
-	let wallet;
-	let keyPair;
-	switch (type){
-		default:
-			// create new random key pair of eliptic curves
-			keyPair = bitcoin.ECPair.makeRandom({network: network});
-
-			// return wallet
-			wallet = {
-		    	"address": keyPair.getAddress(),
-		    	"privateKey": keyPair.toWIF()
-		    };
-		    return wallet;
+	catch(err){
+		console.log(err);
+		return false;
 	}
 };
 
@@ -153,7 +158,7 @@ var verifyMessage = function (message, address, signature, testnet = false){
 	}
 };
 
-var bit38Encrypt = function(privateKey, passphrase){
+var bip38Encrypt = function(privateKey, passphrase){
 	try{
 		if(privateKey === ""){
 			throw new Error("Invalid private key");
@@ -172,7 +177,7 @@ var bit38Encrypt = function(privateKey, passphrase){
 	}
 };
 
-var bip38Decrypt = function (encryptedKey, passphrase){
+var bip38Decrypt = function (encryptedKey, passphrase, consoleLog = false){
 	try {
 		if(encryptedKey === ""){
 			throw new Error("Invalid encrypted key");
@@ -181,7 +186,9 @@ var bip38Decrypt = function (encryptedKey, passphrase){
 			throw new Error("Invalid passphrase");
 		}
 		var decryptedKey = bip38.decrypt(encryptedKey, passphrase, function (status) {
-	  		console.log((status.percent).toFixed(2));
+			if(consoleLog){
+	  			console.log((status.percent).toFixed(2));
+			}
 		});
 		return wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed);
 	}
@@ -199,6 +206,6 @@ module.exports = {
 	signMessage: signMessage,
 	verifyMessage: verifyMessage,
 	verifyMessage: verifyMessage,
-	bit38Encrypt: bit38Encrypt,
+	bip38Encrypt: bip38Encrypt,
 	bip38Decrypt: bip38Decrypt
 }

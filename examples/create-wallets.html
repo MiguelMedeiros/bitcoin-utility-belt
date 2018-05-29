@@ -5,7 +5,7 @@
 	</head>
 	<body>
 
-		<script src="../dist/bitcoin-utility-belt.js"></script>
+		<script src="../dist/bitcoin-utility-belt.min.js"></script>
 		<script>
 			// create a random wallet
 			var wallet = belt.createWallet();
@@ -16,15 +16,6 @@
 			var brainWallet = belt.createBrainWallet("brain wallet passphrase"); 
 			console.log(brainWallet.address);
 			console.log(brainWallet.privateKey);
-
-			// encrypt wallet (bip38)
-			var encryptedWallet = belt.bip38Encrypt(brainWallet.privateKey, "passphrase");
-			console.log(encryptedWallet);
-			var encryptedWallet = "6PYNnxDTyZgYjki18egFRetCYcZb6L4dqSjk8MWaZRFkPhU1oQJ9HPDuZJ";
-
-			// decrypt wallet (bip38)
-			var decryptedWallet = belt.bip38Decrypt(encryptedWallet, "passphrase", false);
-			console.log(decryptedWallet);
 		</script>
 	</body>
 </html>

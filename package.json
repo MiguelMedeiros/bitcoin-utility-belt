@@ -12,7 +12,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "build": "browserify src/index.js --standalone belt | uglifyjs > dist/bitcoin-utility-belt.js"
+    "build": "browserify src/index.js --standalone belt > dist/bitcoin-utility-belt.js | browserify src/index.js --standalone belt | uglifyjs > dist/bitcoin-utility-belt.min.js"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -39,6 +39,6 @@
   },
   "devDependencies": {
     "browserify": "^16.2.2",
-    "uglify-js": "^3.3.27"
+    "uglify-js-es6": "^2.8.9"
   }
 }

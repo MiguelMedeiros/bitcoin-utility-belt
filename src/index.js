@@ -166,7 +166,7 @@ var verifyMessage = function (message, address, signature, testnet = false){
   }
 };
 
-var bip38Encrypt = function(privateKey, passphrase){  
+var bip38Encrypt = function(privateKey, passphrase){
   try{
     // validate private key and passphrase
     if(privateKey === ""){

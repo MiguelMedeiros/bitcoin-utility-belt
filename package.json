@@ -1,17 +1,34 @@
 {
   "name": "bitcoin-utility-belt",
   "version": "1.0.0",
+  "description": "Bitcoin Utility Belt is a client-side Bitcoin JavaScript library",
   "repository": "github:MiguelMedeiros/bitcoin-utility-belt",
   "license": "MIT",
   "author": "Miguel Medeiros",
   "email": "miguel@miguelmedeiros.com.br",
   "url": "http://www.miguelmedeiros.com.br/",
   "private": true,
+  "main": "./src/index.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "build": "browserify app.js --standalone belt > dist/bitcoin-utility-belt.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "build": "browserify src/index.js --standalone belt | uglifyjs > dist/bitcoin-utility-belt.js"
   },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "keywords": [
+    "bip38",
+    "bip39",
+    "bitcoin",
+    "bitcoinjs",
+    "bitcoinjs-message",
+    "browserify",
+    "javascript"
+  ],
+  "files": [
+    "src"
+  ],
   "dependencies": {
     "bigi": "^1.4.2",
     "bip38": "^2.0.2",

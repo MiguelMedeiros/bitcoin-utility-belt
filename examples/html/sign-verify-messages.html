@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Sign and Verify Messages - Examples - Bitcoin Utility Belt</title>
+	</head>
+	<body>
+
+		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
+		<script>
+			// your message
+			var message = "Bitcoin Utility Belt RULES!";
+			console.log(message);
+
+			// create a random wallet (only works with legacy addresses)
+			var wallet = belt.createWallet("legacy");
+			console.log(wallet);
+
+			// sign message with private key
+			var signature = belt.signMessage(message, wallet.privateKey);
+			console.log(signature);
+
+			// verify message with signature, message and address
+			var verifyMessage = belt.verifyMessage(message, wallet.address, signature);
+			console.log(verifyMessage);
+		</script>
+	</body>
+</html>

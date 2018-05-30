@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Validate Address - Examples - Bitcoin Utility Belt</title>
+	</head>
+	<body>
+
+		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
+		<script>
+			// create a random wallet (segwit native)
+			var wallet = belt.createWallet();
+			console.log(wallet);
+
+			// validate address
+			var validate = belt.validateAddress(wallet.address);
+			console.log(validate);
+		</script>
+	</body>
+</html>

@@ -31,7 +31,9 @@
   ],
   "dependencies": {
     "bigi": "^1.4.2",
+    "bip32": "^0.1.0",
     "bip38": "^2.0.2",
+    "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-message": "^2.0.0",
     "safe-buffer": "^5.1.2",

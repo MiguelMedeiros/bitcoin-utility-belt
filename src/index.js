@@ -1,12 +1,56 @@
 // import libs
 var bitcoin = require("bitcoinjs-lib");
 var bitcoinMessage = require("bitcoinjs-message");
+var bip32 = require('bip32');
 var bip38 = require("bip38");
+var bip39 = require('bip39');
 var wif = require("wif");
 var bigi = require("bigi");
 var safeBuffer = require("safe-buffer").Buffer;
 
-var createWallet = function (type = "default", testnet = false){
+var recoverAddress = function(privateKey, type="native", testnet = false){
+  try{
+    // check network: bitcoin or testnet
+    var network;
+    if(testnet){
+      network = bitcoin.networks.testnet;
+    }else{
+      network = bitcoin.networks.bitcoin;
+    }
+
+    // get eliptic curves from wif
+    var keyPair = bitcoin.ECPair.fromWIF(privateKey, network);
+    var publicKeyBuffer = keyPair.getPublicKeyBuffer();
+    var publicKeyHash = bitcoin.crypto.hash160(publicKeyBuffer);
+    var redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+    var address;
+
+    // choose wallet type
+    switch (type){
+      case "legacy":
+        address = keyPair.getAddress();
+        break;
+      case "P2SH":
+        var redeemScriptHash = bitcoin.crypto.hash160(redeemScript);
+        var scriptPubKey = bitcoin.script.scriptHash.output.encode(redeemScriptHash);
+        address = bitcoin.address.fromOutputScript(scriptPubKey);
+        break;
+      default:
+        address = bitcoin.address.fromOutputScript(redeemScript);
+        break;
+    }
+
+    // return address
+    return address;
+  } catch(err){
+    // show error
+    console.log(err);
+    return false;
+  }
+};
+
+
+var recoverSeedWallets = function (seed, count = 1, type="native", bip="49", testnet = false){
   try{
     // check network: bitcoin or testnet
     var network;
@@ -19,71 +63,72 @@ var createWallet = function (type = "default", testnet = false){
     // choosing wallet
     var wallet;
     var keyPair;
-    switch (type){
-      case "default":
-        // create new random key pair of eliptic curves
-        keyPair = bitcoin.ECPair.makeRandom({network: network});
+    var wallets = [];
+    var mnemonic = seed;
+    var seed = bip39.mnemonicToSeed(mnemonic);
 
-        // return wallet
-        wallet = {
-          "address": keyPair.getAddress(),
-          "privateKey": keyPair.toWIF()
-        };
-        return wallet;
+    var root = bip32.fromSeed(seed);
+    var path;
+    var i;
+    for (i = 0; i < count; i++) {    
+      // choose bip
+      switch (bip){
+        case "32":
+          if(testnet){
+            path = "m/0'/1/0"+i;
+          }else{
+            path = "m/0'/0/0"+i;
+          }
+          break;
+        case "44":
+          if(testnet){
+            path = "m/44'/1'/0'/0/"+i;
+          }else{
+            path = "m/44'/0'/0'/0/"+i;
+          }
+          break;
+        default:
+          if(testnet){
+            path = "m/49'/1'/0'/0/"+i;
+          }else{
+            path = "m/49'/0'/0'/0/"+i;
+          }
+          break;
       }
-  } catch(err){
-    console.log(err);
-    return false;
-  }
-};
+      
+      var child = root.derivePath(path);
 
-var createBrainWallet = function(passphrase, testnet = false){
-  try{
-    // check network: bitcoin or testnet
-    var network;
-    if(testnet){
-      network = bitcoin.networks.testnet;
-    }else{
-      network = bitcoin.networks.bitcoin;
+      var d = bigi.fromBuffer(child.privateKey);
+      var keyPair = new bitcoin.ECPair(d, null, {network: network});
+
+      var publicKeyHash = bitcoin.crypto.hash160(child.publicKey);
+      var redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+      var redeemScriptHash = bitcoin.crypto.hash160(redeemScript);
+      var address;
+
+      // choose wallet type
+      switch (type){
+        case "legacy":
+          address = keyPair.getAddress();
+          break;
+        case "P2SH":
+          var outputScript = bitcoin.script.scriptHash.output.encode(redeemScriptHash);
+          address = bitcoin.address.fromOutputScript(outputScript);
+          break;
+        default:
+          address = bitcoin.address.fromOutputScript(redeemScript);
+          break;
+      }
+
+      // return wallet
+      wallets.push({
+        "address": address,
+        "privateKey": keyPair.toWIF()
+      });
     }
-
-    // create a hass buffer from passphrase
-    var passphraseHash = bitcoin.crypto.sha256(safeBuffer.from(passphrase));
-    var hashBuffer = bitcoin.crypto.sha256(passphraseHash);
-    var d = bigi.fromBuffer(hashBuffer);
-
-    // create an eliptic curve
-    var keyPair = new bitcoin.ECPair(d, null, {network: network});
-
-    // return wallet with address and private key
-    var wallet;
-    wallet = {
-       "address": keyPair.getAddress(),
-       "privateKey": keyPair.toWIF()
-    };
-    return wallet;
+    return wallets;
   } catch(err){
-    console.log(err);
-    return false;
-  }
-};
-
-var getAddress = function(privateKey, testnet = false){
-  try{
-    // check network: bitcoin or testnet
-    var network;
-    if(testnet){
-      network = bitcoin.networks.testnet;
-    }else{
-      network = bitcoin.networks.bitcoin;
-    }
-
-    // get eliptic curves from wif
-    var keyPair = bitcoin.ECPair.fromWIF(privateKey, network);
-
-    // return address
-    return keyPair.getAddress();
-  } catch(err){
+    // show error
     console.log(err);
     return false;
   }
@@ -105,7 +150,185 @@ var validateAddress = function(address, testnet = false){
     // no errors return true
     return true;
   } catch (err) {
-    //console.log(err);
+    // return false
+    return false;
+  }
+};
+
+var createWallet = function (type = "native", testnet = false){
+  // check network: bitcoin or testnet
+  var network;
+  if(testnet){
+    network = bitcoin.networks.testnet;
+  }else{
+    network = bitcoin.networks.bitcoin;
+  }
+
+  // create new random key pair of eliptic curves
+  var keyPair = bitcoin.ECPair.makeRandom({network: network});
+  var publicKeyBuffer = keyPair.getPublicKeyBuffer();
+  var publicKeyHash = bitcoin.crypto.hash160(publicKeyBuffer);
+  var redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+  var address;
+
+  // choose wallet type
+  switch (type){
+    case "legacy":
+      address = keyPair.getAddress();
+      break;
+    case "P2SH":
+      var redeemScriptHash = bitcoin.crypto.hash160(redeemScript);
+      var scriptPubKey = bitcoin.script.scriptHash.output.encode(redeemScriptHash);
+      address = bitcoin.address.fromOutputScript(scriptPubKey);
+      break;
+    default:
+      address = bitcoin.address.fromOutputScript(redeemScript);
+      break;
+  }
+
+  // return wallet
+  var wallet = {
+    "address": address,
+    "privateKey": keyPair.toWIF()
+  };
+  return wallet;
+}
+
+var createSeedWallets = function (count = 1, type="native", bip="49", testnet = false){
+  try{
+    // check network: bitcoin or testnet
+    var network;
+    if(testnet){
+      network = bitcoin.networks.testnet;
+    }else{
+      network = bitcoin.networks.bitcoin;
+    }
+
+    // choosing wallet
+    var wallet;
+    var keyPair;
+    var wallets = [];
+    var mnemonic = bip39.generateMnemonic();
+    var seed = bip39.mnemonicToSeed(mnemonic);
+
+    var root = bip32.fromSeed(seed);
+    var path;
+    var i;
+    for (i = 0; i < count; i++) {    
+      // choose bip
+      switch (bip){
+        case "32":
+          if(testnet){
+            path = "m/0'/1/0"+i;
+          }else{
+            path = "m/0'/0/0"+i;
+          }
+          break;
+        case "44":
+          if(testnet){
+            path = "m/44'/1'/0'/0/"+i;
+          }else{
+            path = "m/44'/0'/0'/0/"+i;
+          }
+          break;
+        default:
+          if(testnet){
+            path = "m/49'/1'/0'/0/"+i;
+          }else{
+            path = "m/49'/0'/0'/0/"+i;
+          }
+          break;
+      }
+      
+      var child = root.derivePath(path);
+
+      var d = bigi.fromBuffer(child.privateKey);
+      var keyPair = new bitcoin.ECPair(d, null, {network: network});
+
+      var publicKeyHash = bitcoin.crypto.hash160(child.publicKey);
+      var redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+      var redeemScriptHash = bitcoin.crypto.hash160(redeemScript);
+      var address;
+
+      // choose wallet type
+      switch (type){
+        case "legacy":
+          address = keyPair.getAddress();
+          break;
+        case "P2SH":
+          var outputScript = bitcoin.script.scriptHash.output.encode(redeemScriptHash);
+          address = bitcoin.address.fromOutputScript(outputScript);
+          break;
+        default:
+          address = bitcoin.address.fromOutputScript(redeemScript);
+          break;
+      }
+
+      // return wallet
+      wallets.push({
+        "address": address,
+        "privateKey": keyPair.toWIF()
+      });
+    }
+    wallet = {
+      "seed": mnemonic,
+      "wallets": wallets
+    }
+    return wallet;
+  } catch(err){
+    // show error
+    console.log(err);
+    return false;
+  }
+};
+
+var createBrainWallet = function(passphrase, type="native", testnet = false){
+  try{
+    // check network: bitcoin or testnet
+    var network;
+    if(testnet){
+      network = bitcoin.networks.testnet;
+    }else{
+      network = bitcoin.networks.bitcoin;
+    }
+
+    // create a hass buffer from passphrase
+    var passphraseHash = bitcoin.crypto.sha256(safeBuffer.from(passphrase));
+    var hashBuffer = bitcoin.crypto.sha256(passphraseHash);
+    var d = bigi.fromBuffer(hashBuffer);
+
+    // create an eliptic curve
+    var keyPair = new bitcoin.ECPair(d, null, {network: network});
+
+    var publicKeyBuffer = keyPair.getPublicKeyBuffer();
+    var publicKeyHash = bitcoin.crypto.hash160(publicKeyBuffer);
+    var redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+    var address;
+
+    // choose wallet type
+    switch (type){
+      case "legacy":
+        address = keyPair.getAddress();
+        break;
+      case "P2SH":
+        var redeemScriptHash = bitcoin.crypto.hash160(redeemScript);
+        var outputScript = bitcoin.script.scriptHash.output.encode(redeemScriptHash);
+        address = bitcoin.address.fromOutputScript(outputScript);
+        break;
+      default:
+        address = bitcoin.address.fromOutputScript(redeemScript);
+        break;
+    }
+
+    // return wallet with address and private key
+    var wallet = {
+      "address": address,
+      "privateKey": keyPair.toWIF()
+    };
+    return wallet;
+  } catch(err){
+    // show error
+    console.log(err);
     return false;
   }
 };
@@ -135,25 +358,15 @@ var signMessage = function(message, privateKey, testnet = false){
     var signature = bitcoinMessage.sign(message, privateKeyBuffer, compressed);
     return signature.toString("base64");
   } catch(err){
+    // show error
     console.log(err);
     return false;
   }
 };
 
-var verifyMessage = function (message, address, signature, testnet = false){
+var verifyMessage = function (message, address, signature){
   try{
-    // check network: bitcoin or testnet
-    var network;
-    if(testnet){
-      network = bitcoin.networks.testnet;
-    }else{
-      network = bitcoin.networks.bitcoin;
-    }
 
-    // validate address
-    if(validateAddress(address, network)){
-      throw new Error("Invalid address");
-    }
     if(signature === "" && signature.lenght !== 64){
       throw new Error("Invalid signature");
     }
@@ -161,12 +374,13 @@ var verifyMessage = function (message, address, signature, testnet = false){
     // return true or false after varify message
     return bitcoinMessage.verify(message, address, signature);
   } catch(err){
+    // show error
     console.log(err);
     return false;
   }
 };
 
-var bip38Encrypt = function(privateKey, passphrase){
+var encryptWallet = function(privateKey, passphrase){
   try{
     // validate private key and passphrase
     if(privateKey === ""){
@@ -185,12 +399,13 @@ var bip38Encrypt = function(privateKey, passphrase){
     // return encrypted key
     return encryptedKey;
   } catch(err){
+    // show error
     console.log(err);
     return false;
   }
 };
 
-var bip38Decrypt = function (encryptedKey, passphrase, consoleLog = false){
+var decryptWallet = function (encryptedKey, passphrase, consoleLog = false){
   try {
     // validate encrypte key and passphrase
     if(encryptedKey === ""){
@@ -210,6 +425,7 @@ var bip38Decrypt = function (encryptedKey, passphrase, consoleLog = false){
     // return wif private key
     return wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed);
   } catch(err){
+    // show error
     console.log(err);
     return false;
   }
@@ -217,17 +433,18 @@ var bip38Decrypt = function (encryptedKey, passphrase, consoleLog = false){
 
 // export functions
 module.exports = {
-  createWallet: createWallet,
-  createBrainWallet: createBrainWallet,
-  getAddress: getAddress,
+  recoverAddress: recoverAddress,
+  recoverSeedWallets: recoverSeedWallets,
   validateAddress: validateAddress,
+  createWallet: createWallet,
+  createSeedWallets: createSeedWallets,
+  createBrainWallet: createBrainWallet,
   signMessage: signMessage,
   verifyMessage: verifyMessage,
-  bip38Encrypt: bip38Encrypt,
-  bip38Decrypt: bip38Decrypt
+  encryptWallet: encryptWallet,
+  decryptWallet: decryptWallet
 };
 
-// add Qrcode
-// add sign transactions
-// add others wallets segwit bech32
 // add multsig wallets
+// add sign transactions (op return option)
+// add Qrcode support

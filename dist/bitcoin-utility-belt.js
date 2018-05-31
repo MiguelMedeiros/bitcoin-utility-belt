@@ -49793,6 +49793,77 @@ module.exports = {
 
 }).call(this,require("buffer").Buffer)
 },{"bs58check":110,"buffer":114}],248:[function(require,module,exports){
+
+// export functions
+module.exports = {
+  message: require("./message"),
+  wallet: require("./wallet")
+};
+
+// add sign transactions (op return option)
+// add multsig wallets
+// add Qrcode support
+
+},{"./message":249,"./wallet":250}],249:[function(require,module,exports){
+// import libs
+var bitcoin = require("bitcoinjs-lib");
+var bitcoinMessage = require("bitcoinjs-message");
+
+var sign = function(message, privateKey, testnet = false){
+  try{
+    if(privateKey === ""){
+      throw new Error("Invalid private key");
+    }
+
+    // check network: bitcoin or testnet
+    var network;
+    if(testnet){
+      network = bitcoin.networks.testnet;
+    }else{
+      network = bitcoin.networks.bitcoin;
+    }
+
+    // get eliptic curve pairs
+    var keyPair = bitcoin.ECPair.fromWIF(privateKey, network);
+
+    // get private key buffer
+    var privateKeyBuffer = keyPair.d.toBuffer(32);
+    var compressed = keyPair.compressed;
+
+    // return signature
+    var signature = bitcoinMessage.sign(message, privateKeyBuffer, compressed);
+    return signature.toString("base64");
+  } catch(err){
+    // show error
+    console.log(err);
+    return false;
+  }
+};
+
+var verify = function (message, address, signature){
+  try{
+
+    if(signature === "" && signature.lenght !== 64){
+      throw new Error("Invalid signature");
+    }
+
+    // return true or false after varify message
+    return bitcoinMessage.verify(message, address, signature);
+  } catch(err){
+    // show error
+    console.log(err);
+    return false;
+  }
+};
+
+// export functions
+module.exports = {
+  sign: sign,
+  verify: verify
+};
+
+
+},{"bitcoinjs-lib":47,"bitcoinjs-message":76}],250:[function(require,module,exports){
 // import libs
 var bitcoin = require("bitcoinjs-lib");
 var bitcoinMessage = require("bitcoinjs-message");
@@ -49845,7 +49916,7 @@ var recoverAddress = function(privateKey, type="native", testnet = false){
 };
 
 
-var recoverSeedWallets = function (seed, count = 1, type="native", bip="49", testnet = false){
+var recoverSeed = function (seed, count = 1, type="native", bip="49", testnet = false){
   try{
     // check network: bitcoin or testnet
     var network;
@@ -49950,7 +50021,7 @@ var validateAddress = function(address, testnet = false){
   }
 };
 
-var createWallet = function (type = "native", testnet = false){
+var create = function (type = "native", testnet = false){
   // check network: bitcoin or testnet
   var network;
   if(testnet){
@@ -49989,7 +50060,7 @@ var createWallet = function (type = "native", testnet = false){
   return wallet;
 }
 
-var createSeedWallets = function (count = 1, type="native", bip="49", testnet = false){
+var createSeed = function (count = 1, type="native", bip="49", testnet = false){
   try{
     // check network: bitcoin or testnet
     var network;
@@ -50128,54 +50199,7 @@ var createBrainWallet = function(passphrase, type="native", testnet = false){
   }
 };
 
-var signMessage = function(message, privateKey, testnet = false){
-  try{
-    if(privateKey === ""){
-      throw new Error("Invalid private key");
-    }
-
-    // check network: bitcoin or testnet
-    var network;
-    if(testnet){
-      network = bitcoin.networks.testnet;
-    }else{
-      network = bitcoin.networks.bitcoin;
-    }
-
-    // get eliptic curve pairs
-    var keyPair = bitcoin.ECPair.fromWIF(privateKey, network);
-
-    // get private key buffer
-    var privateKeyBuffer = keyPair.d.toBuffer(32);
-    var compressed = keyPair.compressed;
-
-    // return signature
-    var signature = bitcoinMessage.sign(message, privateKeyBuffer, compressed);
-    return signature.toString("base64");
-  } catch(err){
-    // show error
-    console.log(err);
-    return false;
-  }
-};
-
-var verifyMessage = function (message, address, signature){
-  try{
-
-    if(signature === "" && signature.lenght !== 64){
-      throw new Error("Invalid signature");
-    }
-
-    // return true or false after varify message
-    return bitcoinMessage.verify(message, address, signature);
-  } catch(err){
-    // show error
-    console.log(err);
-    return false;
-  }
-};
-
-var encryptWallet = function(privateKey, passphrase){
+var encrypt = function(privateKey, passphrase){
   try{
     // validate private key and passphrase
     if(privateKey === ""){
@@ -50200,7 +50224,7 @@ var encryptWallet = function(privateKey, passphrase){
   }
 };
 
-var decryptWallet = function (encryptedKey, passphrase, consoleLog = false){
+var decrypt = function (encryptedKey, passphrase, consoleLog = false){
   try {
     // validate encrypte key and passphrase
     if(encryptedKey === ""){
@@ -50228,23 +50252,16 @@ var decryptWallet = function (encryptedKey, passphrase, consoleLog = false){
 
 // export functions
 module.exports = {
-  recoverAddress: recoverAddress,
-  recoverSeedWallets: recoverSeedWallets,
-  validateAddress: validateAddress,
-  createWallet: createWallet,
-  createSeedWallets: createSeedWallets,
+  create: create,
+  createSeed: createSeed,
   createBrainWallet: createBrainWallet,
-  signMessage: signMessage,
-  verifyMessage: verifyMessage,
-  encryptWallet: encryptWallet,
-  decryptWallet: decryptWallet
+  decrypt: decrypt,
+  encrypt: encrypt,
+  recoverAddress: recoverAddress,
+  recoverSeed: recoverSeed,
+  validateAddress: validateAddress
 };
 
-// recover from seed
-// add sign transactions
-// add multsig wallets
-// add Qrcode
-// op return
 
 },{"bigi":21,"bip32":25,"bip38":26,"bip39":27,"bitcoinjs-lib":47,"bitcoinjs-message":76,"safe-buffer":215,"wif":247}]},{},[248])(248)
 });

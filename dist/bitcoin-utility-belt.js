@@ -4236,39 +4236,42 @@ require('./convert')
 module.exports = BigInteger
 },{"./bigi":19,"./convert":20}],22:[function(require,module,exports){
 module.exports={
-  "_from": "bigi",
+  "_args": [
+    [
+      "bigi@1.4.2",
+      "F:\\bitcoin-utility-belt"
+    ]
+  ],
+  "_from": "bigi@1.4.2",
   "_id": "bigi@1.4.2",
   "_inBundle": false,
   "_integrity": "sha1-nGZalfiLiwj8Bc/XMfVhhZ1yWCU=",
   "_location": "/bigi",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "version",
     "registry": true,
-    "raw": "bigi",
+    "raw": "bigi@1.4.2",
     "name": "bigi",
     "escapedName": "bigi",
-    "rawSpec": "",
+    "rawSpec": "1.4.2",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "1.4.2"
   },
   "_requiredBy": [
-    "#USER",
     "/",
     "/bip38",
     "/bitcoinjs-lib",
-    "/ecurve"
+    "/ecurve",
+    "/tiny-secp256k1"
   ],
   "_resolved": "https://registry.npmjs.org/bigi/-/bigi-1.4.2.tgz",
-  "_shasum": "9c665a95f88b8b08fc05cfd731f561859d725825",
-  "_spec": "bigi",
+  "_spec": "1.4.2",
   "_where": "F:\\bitcoin-utility-belt",
   "bugs": {
     "url": "https://github.com/cryptocoinjs/bigi/issues"
   },
-  "bundleDependencies": false,
   "dependencies": {},
-  "deprecated": false,
   "description": "Big integers.",
   "devDependencies": {
     "coveralls": "^2.11.2",
@@ -38625,29 +38628,36 @@ utils.intFromLE = intFromLE;
 
 },{"bn.js":77,"minimalistic-assert":177,"minimalistic-crypto-utils":178}],153:[function(require,module,exports){
 module.exports={
-  "_from": "elliptic@^6.2.3",
+  "_args": [
+    [
+      "elliptic@6.4.0",
+      "F:\\bitcoin-utility-belt"
+    ]
+  ],
+  "_from": "elliptic@6.4.0",
   "_id": "elliptic@6.4.0",
   "_inBundle": false,
   "_integrity": "sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=",
   "_location": "/elliptic",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
+    "type": "version",
     "registry": true,
-    "raw": "elliptic@^6.2.3",
+    "raw": "elliptic@6.4.0",
     "name": "elliptic",
     "escapedName": "elliptic",
-    "rawSpec": "^6.2.3",
+    "rawSpec": "6.4.0",
     "saveSpec": null,
-    "fetchSpec": "^6.2.3"
+    "fetchSpec": "6.4.0"
   },
   "_requiredBy": [
+    "/browserify-sign",
+    "/create-ecdh",
     "/secp256k1"
   ],
   "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz",
-  "_shasum": "cac9af8762c85836187003c8dfe193e5e2eae5df",
-  "_spec": "elliptic@^6.2.3",
-  "_where": "F:\\bitcoin-utility-belt\\node_modules\\secp256k1",
+  "_spec": "6.4.0",
+  "_where": "F:\\bitcoin-utility-belt",
   "author": {
     "name": "Fedor Indutny",
     "email": "fedor@indutny.com"
@@ -38655,7 +38665,6 @@ module.exports={
   "bugs": {
     "url": "https://github.com/indutny/elliptic/issues"
   },
-  "bundleDependencies": false,
   "dependencies": {
     "bn.js": "^4.4.0",
     "brorand": "^1.0.1",
@@ -38665,7 +38674,6 @@ module.exports={
     "minimalistic-assert": "^1.0.0",
     "minimalistic-crypto-utils": "^1.0.0"
   },
-  "deprecated": false,
   "description": "EC cryptography",
   "devDependencies": {
     "brfs": "^1.4.3",
@@ -49928,12 +49936,11 @@ var recoverSeed = function (seed, count = 1, type="native", bip="49", testnet = 
 
     // choosing wallet
     var wallet;
-    var keyPair;
     var wallets = [];
     var mnemonic = seed;
-    var seed = bip39.mnemonicToSeed(mnemonic);
+    var bip39seed = bip39.mnemonicToSeed(mnemonic);
 
-    var root = bip32.fromSeed(seed);
+    var root = bip32.fromSeed(bip39seed);
     var path;
     var i;
     for (i = 0; i < count; i++) {    
@@ -50058,7 +50065,7 @@ var create = function (type = "native", testnet = false){
     "privateKey": keyPair.toWIF()
   };
   return wallet;
-}
+};
 
 var createSeed = function (count = 1, type="native", bip="49", testnet = false){
   try{
@@ -50072,7 +50079,6 @@ var createSeed = function (count = 1, type="native", bip="49", testnet = false){
 
     // choosing wallet
     var wallet;
-    var keyPair;
     var wallets = [];
     var mnemonic = bip39.generateMnemonic();
     var seed = bip39.mnemonicToSeed(mnemonic);
@@ -50139,7 +50145,7 @@ var createSeed = function (count = 1, type="native", bip="49", testnet = false){
     wallet = {
       "seed": mnemonic,
       "wallets": wallets
-    }
+    };
     return wallet;
   } catch(err){
     // show error
@@ -50237,7 +50243,7 @@ var decrypt = function (encryptedKey, passphrase, consoleLog = false){
     // decrypt key
     var decryptedKey = bip38.decrypt(encryptedKey,passphrase,function(status){
       if(consoleLog){
-        console.log((status.percent).toFixed(2));
+        console.log(status.percent.toFixed(2));
       }
     });
 

@@ -2,6 +2,7 @@
 // export functions
 module.exports = {
   message: require("./message"),
+  transaction: require("./transaction"),
   wallet: require("./wallet")
 };
 

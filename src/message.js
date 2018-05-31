@@ -1,15 +1,15 @@
 // import libs
-var bitcoin = require("bitcoinjs-lib");
-var bitcoinMessage = require("bitcoinjs-message");
+let bitcoin = require("bitcoinjs-lib");
+let bitcoinMessage = require("bitcoinjs-message");
 
-var sign = function(message, privateKey, testnet = false){
+let sign = (message, privateKey, testnet = false) => {
   try{
     if(privateKey === ""){
       throw new Error("Invalid private key");
     }
 
     // check network: bitcoin or testnet
-    var network;
+    let network;
     if(testnet){
       network = bitcoin.networks.testnet;
     }else{
@@ -17,23 +17,23 @@ var sign = function(message, privateKey, testnet = false){
     }
 
     // get eliptic curve pairs
-    var keyPair = bitcoin.ECPair.fromWIF(privateKey, network);
+    let keyPair = bitcoin.ECPair.fromWIF(privateKey, network);
 
     // get private key buffer
-    var privateKeyBuffer = keyPair.d.toBuffer(32);
-    var compressed = keyPair.compressed;
+    let privateKeyBuffer = keyPair.d.toBuffer(32);
+    let compressed = keyPair.compressed;
 
     // return signature
-    var signature = bitcoinMessage.sign(message, privateKeyBuffer, compressed);
+    let signature = bitcoinMessage.sign(message, privateKeyBuffer, compressed);
     return signature.toString("base64");
   } catch(err){
     // show error
-    console.log(err);
+    console.error(err);
     return false;
   }
 };
 
-var verify = function (message, address, signature){
+let verify = (message, address, signature) => {
   try{
 
     if(signature === "" && signature.lenght !== 64){
@@ -44,7 +44,7 @@ var verify = function (message, address, signature){
     return bitcoinMessage.verify(message, address, signature);
   } catch(err){
     // show error
-    console.log(err);
+    console.error(err);
     return false;
   }
 };

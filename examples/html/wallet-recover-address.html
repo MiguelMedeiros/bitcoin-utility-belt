@@ -1,47 +1,38 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<title>Recover Addresses - Examples - Bitcoin Utility Belt</title>
+		<title>Recover Address - Examples - Bitcoin Utility Belt</title>
 	</head>
 	<body>
-
+		<!-- Importing Bitcoin Utility Belt script -->
 		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
 		<script>
 			//************************************************************
 			// segwit native address recover
-			var wallet = belt.createWallet();
+			var wallet = belt.wallet.create();
 			console.log("segwit native wallet", wallet);
 
 			// recover address
-			var address = belt.recoverAddress(wallet.privateKey);
+			var address = belt.wallet.recoverAddress(wallet.privateKey);
 			console.log(address);
 
 			//************************************************************
 			// segwit P2SH address recover
-			var wallet = belt.createWallet("P2SH");
+			var wallet = belt.wallet.create("P2SH");
 			console.log("segwit P2SH wallet",wallet);
 
 			// recover address
-			var address = belt.recoverAddress(wallet.privateKey, "P2SH");
+			var address = belt.wallet.recoverAddress(wallet.privateKey, "P2SH");
 			console.log(address);
 
 			//************************************************************
 			// legacy address recover
-			var wallet = belt.createWallet("legacy");
+			var wallet = belt.wallet.create("legacy");
 			console.log("legacy wallet",wallet);
 
 			// recover address
-			var address = belt.recoverAddress(wallet.privateKey, "legacy");
+			var address = belt.wallet.recoverAddress(wallet.privateKey, "legacy");
 			console.log(address);
-
-			//************************************************************
-			// seed wallets recover (segwit native)
-			var seedWallets = belt.createSeedWallets(5);
-			console.log("legacy wallet",seedWallets);
-
-			// recover address
-			var addresses = belt.recoverSeedWallets(seedWallets.seed, 5);
-			console.log(addresses);
 		</script>
 	</body>
 </html>

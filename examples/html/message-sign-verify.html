@@ -4,7 +4,7 @@
 		<title>Sign and Verify Messages - Examples - Bitcoin Utility Belt</title>
 	</head>
 	<body>
-
+		<!-- Importing Bitcoin Utility Belt script -->
 		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
 		<script>
 			// your message
@@ -12,15 +12,15 @@
 			console.log(message);
 
 			// create a random wallet (only works with legacy addresses)
-			var wallet = belt.createWallet("legacy");
+			var wallet = belt.wallet.create("legacy");
 			console.log(wallet);
 
 			// sign message with private key
-			var signature = belt.signMessage(message, wallet.privateKey);
+			var signature = belt.message.sign(message, wallet.privateKey);
 			console.log(signature);
 
 			// verify message with signature, message and address
-			var verifyMessage = belt.verifyMessage(message, wallet.address, signature);
+			var verifyMessage = belt.message.verify(message, wallet.address, signature);
 			console.log(verifyMessage);
 		</script>
 	</body>

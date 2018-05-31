@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Creating Wallet - Examples - Bitcoin Utility Belt</title>
+	</head>
+	<body>
+		<!-- Importing Bitcoin Utility Belt script -->
+		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
+		<script>
+			// ********************************************************
+			// creating random wallets
+			// type: native segwit (default)
+			var wallet = belt.wallet.create();
+			console.log("native segwit", wallet);
+
+			// type: legacy
+			var wallet = belt.wallet.create("legacy");
+			console.log("legacy", wallet);
+
+			// type: P2SH segwit
+			var wallet = belt.wallet.create("P2SH");
+			console.log("P2SH segwit", wallet);
+		</script>
+	</body>
+</html>

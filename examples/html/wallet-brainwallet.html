@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Creating Brain Wallet - Examples - Bitcoin Utility Belt</title>
+	</head>
+	<body>
+		<!-- Importing Bitcoin Utility Belt script -->
+		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
+		<script>
+			// *************************************************************************
+			// creating brain wallets
+			// type: segwit native (default)
+			var brainWallet = belt.wallet.createBrainWallet("brain wallet passphrase"); 
+			console.log("brainwallet native segwit", brainWallet);
+
+			// type: legacy
+			var brainWallet = belt.wallet.createBrainWallet("brain wallet passphrase","legacy"); 
+			console.log("brainwallet legacy", brainWallet);
+
+			// type: P2SH segwit
+			var brainWallet = belt.wallet.createBrainWallet("brain wallet passphrase","P2SH"); 
+			console.log("brainwallet P2SH segwit", brainWallet);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Recover Seed Wallets - Examples - Bitcoin Utility Belt</title>
+	</head>
+	<body>
+		<!-- Importing Bitcoin Utility Belt script -->
+		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
+		<script>
+			// ********************************************************
+			// seed wallets recover (segwit native)
+			var seedWallets = belt.wallet.createSeed(5);
+			console.log("legacy wallet",seedWallets);
+
+			// recover address
+			var addresses = belt.wallet.recoverSeed(seedWallets.seed, 5);
+			console.log(addresses);
+		</script>
+	</body>
+</html>

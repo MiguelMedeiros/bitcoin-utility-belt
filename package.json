@@ -41,6 +41,11 @@
   },
   "devDependencies": {
     "browserify": "^16.2.2",
+    "gulp": "^3.9.1",
+    "gulp-jshint": "^2.1.0",
+    "gulp-uglify": "^3.0.0",
+    "jshint": "^2.9.5",
+    "jshint-stylish": "^2.2.1",
     "uglify-js-es6": "^2.8.9"
   }
 }

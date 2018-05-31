@@ -62,12 +62,11 @@ var recoverSeed = function (seed, count = 1, type="native", bip="49", testnet = 
 
     // choosing wallet
     var wallet;
-    var keyPair;
     var wallets = [];
     var mnemonic = seed;
-    var seed = bip39.mnemonicToSeed(mnemonic);
+    var bip39seed = bip39.mnemonicToSeed(mnemonic);
 
-    var root = bip32.fromSeed(seed);
+    var root = bip32.fromSeed(bip39seed);
     var path;
     var i;
     for (i = 0; i < count; i++) {    
@@ -192,7 +191,7 @@ var create = function (type = "native", testnet = false){
     "privateKey": keyPair.toWIF()
   };
   return wallet;
-}
+};
 
 var createSeed = function (count = 1, type="native", bip="49", testnet = false){
   try{
@@ -206,7 +205,6 @@ var createSeed = function (count = 1, type="native", bip="49", testnet = false){
 
     // choosing wallet
     var wallet;
-    var keyPair;
     var wallets = [];
     var mnemonic = bip39.generateMnemonic();
     var seed = bip39.mnemonicToSeed(mnemonic);
@@ -273,7 +271,7 @@ var createSeed = function (count = 1, type="native", bip="49", testnet = false){
     wallet = {
       "seed": mnemonic,
       "wallets": wallets
-    }
+    };
     return wallet;
   } catch(err){
     // show error
@@ -371,7 +369,7 @@ var decrypt = function (encryptedKey, passphrase, consoleLog = false){
     // decrypt key
     var decryptedKey = bip38.decrypt(encryptedKey,passphrase,function(status){
       if(consoleLog){
-        console.log((status.percent).toFixed(2));
+        console.log(status.percent.toFixed(2));
       }
     });
 

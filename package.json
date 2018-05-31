@@ -18,8 +18,11 @@
     "node": ">=4.0.0"
   },
   "keywords": [
+    "bip32",
     "bip38",
     "bip39",
+    "bip44",
+    "bip49",
     "bitcoin",
     "bitcoinjs",
     "bitcoinjs-message",

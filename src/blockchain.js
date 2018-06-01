@@ -48,14 +48,14 @@ let blocks = (limit = 10, sort = "", dir = "desc", next = "") => {
   if(next){
     url = url+"&next="+next;
   }
+  console.log(url);
   return fetch (url)
   .then(res => res.json())
     .then(json => {
-      return json.block;
+      return json.blocks;
   })
   .catch(err => console.error(err));
 };
-
 
 let search = (message) => {
   return fetch("https://api.smartbit.com.au/v1/blockchain/search?q="+message)

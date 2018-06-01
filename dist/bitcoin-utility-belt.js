@@ -49884,14 +49884,14 @@ let blocks = (limit = 10, sort = "", dir = "desc", next = "") => {
   if(next){
     url = url+"&next="+next;
   }
+  console.log(url);
   return fetch (url)
   .then(res => res.json())
     .then(json => {
-      return json.block;
+      return json.blocks;
   })
   .catch(err => console.error(err));
 };
-
 
 let search = (message) => {
   return fetch("https://api.smartbit.com.au/v1/blockchain/search?q="+message)
@@ -49981,11 +49981,11 @@ module.exports = {
   address: address,
   block: block,
   blocks: blocks,
-  search: search,
-  totals: totals,
-  stats: stats,
   pool: pool,
-  pools: pools
+  pools: pools,
+  search: search,
+  stats: stats,
+  totals: totals
 };
 },{"./wallet":254,"bitcoinjs-lib":47,"in-array":171,"node-fetch":180}],251:[function(require,module,exports){
 // export functions

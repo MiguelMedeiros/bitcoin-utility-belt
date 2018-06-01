@@ -5,6 +5,17 @@
 
 I've made this project to make easy to use a lot of Bitcoin functions that you need to build a website or a NodeJS application. You can read the examples to find out how to use it! Feel free to contribute with code or a donation!
 
+## Readme Index
+  * [NodeJS Installation](#nodejs-installation)
+  * [Browser Installation](#browser-installation)
+  * [How to compile a new browser version](#how-to-compile-a-new-browser-version)
+  * [Examples](#examples)
+    * [Blockchain](#blockchain-3pbp)
+    * [Messages](#messages)
+    * [Wallets](#wallets)
+  * [Contributing](#contributing)
+  * [License](#license-mit)
+
 ## NodeJS Installation
 You just need to install the [npm package](https://www.npmjs.com/package/bitcoin-utility-belt) to your project.
 ``` bash

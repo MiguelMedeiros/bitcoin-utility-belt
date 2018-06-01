@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Blockchain Statistics - Examples - Bitcoin Utility Belt</title>
+	</head>
+	<body>
+		<!-- Importing Bitcoin Utility Belt script -->
+		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
+		<script>
+			// *************************************************************************
+			// API: https://www.smartbit.com.au/api
+			// get a list of statistics about Bitcoin
+			let days = 20; // mas 32 days
+			belt.blockchain.stats(days).then((res) => console.log(res));
+		</script>
+	</body>
+</html>

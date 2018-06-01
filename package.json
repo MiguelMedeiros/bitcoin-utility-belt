@@ -26,8 +26,10 @@
     "bitcoin",
     "bitcoinjs",
     "bitcoinjs-message",
+    "blockexplorer",
     "browserify",
-    "javascript"
+    "javascript",
+    "smartbit"
   ],
   "files": [
     "src"
@@ -39,6 +41,8 @@
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-message": "^2.0.0",
+    "in-array": "^0.1.2",
+    "node-fetch": "^2.1.2",
     "safe-buffer": "^5.1.2",
     "wif": "^2.0.6"
   },

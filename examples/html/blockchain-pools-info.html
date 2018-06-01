@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Blockchain Pools Info - Examples - Bitcoin Utility Belt</title>
+	</head>
+	<body>
+		<!-- Importing Bitcoin Utility Belt script -->
+		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
+		<script>
+			// *************************************************************************
+			// API: https://www.smartbit.com.au/api
+			// get pool info
+			let name = "AntPool";
+			limit = 10; // limit the result blocks
+			sort = "height"; // sort by "height","hash","size","transaction_count","input_amount","output_amount","fees","input_count","output_count"
+			dir = "desc";
+			belt.blockchain.pool(name, limit, sort, dir).then((res) => console.log(res));
+
+
+			//// get pools info
+			limit = 10; // limit the result blocks
+			sort = "height"; // sort by "block_count","name","transaction_count","reward_amount","fee_amount","size"
+			dir = "desc";
+			next = ""; // next page hash (get from the result)
+			belt.blockchain.pools( limit, sort, dir, next).then((res) => console.log(res));
+
+		</script>
+	</body>
+</html>

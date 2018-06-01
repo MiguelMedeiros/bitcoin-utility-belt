@@ -1,5 +1,7 @@
 # Bitcoin Utility Belt
 [![NPM](https://img.shields.io/npm/v/bitcoin-utility-belt.svg)](https://www.npmjs.com/package/bitcoin-utility-belt)
+[![NPM](https://img.shields.io/david/MiguelMedeiros/bitcoin-utility-belt.svg?style=flat-square)](https://david-dm.org/MiguelMedeiros/bitcoin-utility-belt#info=dependencies)
+
 
 I've made this project to make easy to use a lot of Bitcoin functions that you need to build a website or a NodeJS application. You can read the examples to find out how to use it! Feel free to contribute with code or a donation!
 

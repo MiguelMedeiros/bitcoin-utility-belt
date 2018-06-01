@@ -14,6 +14,7 @@ I've made this project to make easy to use a lot of Bitcoin functions that you n
     * [Messages](#messages)
     * [Wallets](#wallets)
   * [Contributing](#contributing)
+  * [Donate](#donate-btc)
   * [License](#license-mit)
 
 ## NodeJS Installation

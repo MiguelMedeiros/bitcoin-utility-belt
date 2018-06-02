@@ -80,6 +80,7 @@ Some examples interact (via HTTPS) with a 3rd Party Blockchain Provider (3PBP).
 - Recover Address from Private Key (WIF format) [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-recover-address.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-recover-address.js)
 - Recover Wallets from Seed [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-recover-seed.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-recover-seed.js)
 - Validate Wallet Address [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-validate-address.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-validate-address.js)
+- Create and Validate Mnemonic Words [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-mnemonic-words.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-mnemonic-words.js)
 
 ## Contributing
 I'll be glad to receive new pull requests to improve this project! Feel free to contribute!

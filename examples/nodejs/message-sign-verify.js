@@ -5,8 +5,8 @@ let belt = require("bitcoin-utility-belt");
 let message = "Bitcoin Utility Belt RULES!";
 console.log(message);
 
-// create a random wallet (only works with legacy addresses)
-let wallet = belt.wallet.create("legacy");
+// create a random wallet (only works with P2PKH addresses)
+let wallet = belt.wallet.create();
 console.log(wallet);
 
 // sign message with private key

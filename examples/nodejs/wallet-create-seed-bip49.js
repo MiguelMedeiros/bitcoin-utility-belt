@@ -2,12 +2,8 @@
 let belt = require("bitcoin-utility-belt");
 
 // creating bip49 wallets (uses bip39 - mnemonic's seed) - default
-// type: P2PK (default)
-let seedWallet = belt.wallet.createSeed(5, null);
-console.log("seed wallet bip49 P2PK", seedWallet);
-
-// type: P2PKH
-seedWallet = belt.wallet.createSeed(5, "P2PKH");
+// type: P2PKH (default)
+seedWallet = belt.wallet.createSeed(5);
 console.log("seed wallet bip49 P2PKH", seedWallet);
 
 // type: P2SH

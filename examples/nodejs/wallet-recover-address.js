@@ -2,21 +2,12 @@
 let belt = require("bitcoin-utility-belt");
 
 //************************************************************
-// P2PK address recover
-let wallet = belt.wallet.create();
-console.log("P2PK wallet", wallet);
-
-// recover address
-let address = belt.wallet.recoverAddress(wallet.privateKey);
-console.log(address);
-
-//************************************************************
 // P2PKH address recover
-wallet = belt.wallet.create("P2PKH");
+wallet = belt.wallet.create();
 console.log("P2PKH wallet",wallet);
 
 // recover address
-address = belt.wallet.recoverAddress(wallet.privateKey, "P2PKH");
+address = belt.wallet.recoverAddress(wallet.privateKey);
 console.log(address);
 
 //************************************************************

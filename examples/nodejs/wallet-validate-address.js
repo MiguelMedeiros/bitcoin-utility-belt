@@ -2,7 +2,7 @@
 let belt = require("bitcoin-utility-belt");
 
 // ********************************************************
-// create a random wallet (P2PK)
+// create a random wallet (P2PKH)
 let wallet = belt.wallet.create();
 console.log(wallet);
 

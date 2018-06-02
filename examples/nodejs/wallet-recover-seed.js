@@ -2,21 +2,12 @@
 let belt = require("bitcoin-utility-belt");
 
 // ********************************************************
-// seed wallets recover (P2PK)
-let seedWallets = belt.wallet.createSeed(5);
-console.log("P2PK wallet",seedWallets);
-
-// recover address
-let addresses = belt.wallet.recoverSeed(seedWallets.seed, 5);
-console.log(addresses);
-
-// ********************************************************
 // seed wallets recover (P2PKH)
-seedWallets = belt.wallet.createSeed(5, "P2PKH");
+seedWallets = belt.wallet.createSeed(5);
 console.log("P2PKH wallet",seedWallets);
 
 // recover address
-addresses = belt.wallet.recoverSeed(seedWallets.seed, 5, "P2PKH");
+addresses = belt.wallet.recoverSeed(seedWallets.seed, 5);
 console.log(addresses);
 
 // ********************************************************

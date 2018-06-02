@@ -5,16 +5,17 @@
 	</head>
 	<body>
 		<!-- Importing Bitcoin Utility Belt script -->
+		
+		<script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
 		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
 		<script>
 			// ********************************************************
 			// creating random wallets
-			// type: P2PK (default)
-			let wallet = belt.wallet.create();
-			console.log("wallet P2PK", wallet);
-
-			// type: P2PKH
-			wallet = belt.wallet.create("P2PKH");
+			// type: P2PKH (default)
+			wallet = belt.wallet.create();
 			console.log("wallet P2PKH", wallet);
 
 			// type: P2SH
@@ -28,6 +29,10 @@
 			// type: P2WSH
 			wallet = belt.wallet.create("P2WSH");
 			console.log("wallet P2WSH", wallet);
+
+			var data = {"address": "mmDmxzJNUfn7dTP9LS8uYieS9dfygroLP4", "amount": 10}
+			$.post('https://api.blockcypher.com/v1/btc/test3/faucet?token=c5acc2c2b275435fa915480fa60d36fe', JSON.stringify(data))
+			  .then(function(d) {console.log(d)});
 		</script>
 	</body>
 </html>

@@ -9,12 +9,8 @@
 		<script>
 			// ********************************************************
 			// creating bip32 wallets (uses bip39 - mnemonic's seed)
-			// type: P2PK (default)
-			let seedWallet = belt.wallet.createSeed(5, null, "32");
-			console.log("seed wallet bip32 P2PK", seedWallet);
-
-			// type: P2PKH
-			seedWallet = belt.wallet.createSeed(5, "P2PKH", "32");
+			// type: P2PKH (default)
+			seedWallet = belt.wallet.createSeed(5, null, "32");
 			console.log("seed wallet bip32 P2PKH", seedWallet);
 
 			// type: P2SH

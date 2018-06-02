@@ -2,12 +2,8 @@
 let belt = require("bitcoin-utility-belt");
 
 // creating brain wallets
-// type: P2PK (default)
-let brainWallet = belt.wallet.createBrainWallet("brain wallet passphrase"); 
-console.log("brainwallet P2PK", brainWallet);
-
-// type: P2PKH
-brainWallet = belt.wallet.createBrainWallet("brain wallet passphrase","P2PKH"); 
+// type: P2PKH (default)
+brainWallet = belt.wallet.createBrainWallet("brain wallet passphrase"); 
 console.log("brainwallet P2PKH", brainWallet);
 
 // type: P2SH

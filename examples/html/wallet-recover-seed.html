@@ -8,16 +8,7 @@
 		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
 		<script>
 			// ********************************************************
-			// seed wallets recover (P2PK)
-			let seedWallets = belt.wallet.createSeed(5);
-			console.log("P2PK wallet",seedWallets);
-
-			// recover address
-			let addresses = belt.wallet.recoverSeed(seedWallets.seed, 5);
-			console.log(addresses);
-			
-			// ********************************************************
-			// seed wallets recover (P2PKH)
+			// seed wallets recover (P2PKH - default)
 			seedWallets = belt.wallet.createSeed(5, "P2PKH");
 			console.log("P2PKH wallet",seedWallets);
 

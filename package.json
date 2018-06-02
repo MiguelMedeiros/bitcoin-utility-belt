@@ -1,6 +1,6 @@
 {
   "name": "bitcoin-utility-belt",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Bitcoin Utility Belt is a client-side Bitcoin JavaScript library",
   "repository": "github:MiguelMedeiros/bitcoin-utility-belt",
   "license": "MIT",
@@ -44,6 +44,7 @@
     "bitcoinjs-message": "^2.0.0",
     "in-array": "^0.1.2",
     "node-fetch": "^2.1.2",
+    "request": "^2.87.0",
     "safe-buffer": "^5.1.2",
     "wif": "^2.0.6"
   },

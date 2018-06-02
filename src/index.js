@@ -8,4 +8,3 @@ module.exports = {
 
 // add sign transactions (op return option)
 // add multsig wallets
-// add Qrcode support

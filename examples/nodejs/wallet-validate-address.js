@@ -1,7 +1,8 @@
 // import bitcoin utility belt
 let belt = require("bitcoin-utility-belt");
 
-// create a random wallet (segwit native)
+// ********************************************************
+// create a random wallet (P2PK)
 let wallet = belt.wallet.create();
 console.log(wallet);
 

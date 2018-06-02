@@ -7,8 +7,9 @@ let bip39 = require('bip39');
 let wif = require("wif");
 let bigi = require("bigi");
 let safeBuffer = require("safe-buffer").Buffer;
+let assert = require("assert");
 
-let recoverAddress = (privateKey, type="native", testnet = false) => {
+let recoverAddress = (privateKey, type="P2PK", testnet = false) => {
   try{
     // check network: bitcoin or testnet
     let network;
@@ -18,28 +19,41 @@ let recoverAddress = (privateKey, type="native", testnet = false) => {
       network = bitcoin.networks.bitcoin;
     }
 
-    // get eliptic curves from wif
+    // create key pair of eliptic curves
     let keyPair = bitcoin.ECPair.fromWIF(privateKey, network);
+
+    // public key buffer
     let publicKeyBuffer = keyPair.getPublicKeyBuffer();
+
+    // public key hash
     let publicKeyHash = bitcoin.crypto.hash160(publicKeyBuffer);
-    let redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+
     let address;
+    let redeemScript;
+    let scriptPubKey;
 
     // choose wallet type
     switch (type){
-      case "legacy":
+      case "P2PKH": // pay to public key hash
         address = keyPair.getAddress();
         break;
-      case "P2SH":
-        let redeemScriptHash = bitcoin.crypto.hash160(redeemScript);
-        let scriptPubKey = bitcoin.script.scriptHash.output.encode(redeemScriptHash);
-        address = bitcoin.address.fromOutputScript(scriptPubKey);
+      case "P2SH": // pay to script hash
+        scriptPubKey = bitcoin.script.scriptHash.output.encode(publicKeyHash);
+        address = bitcoin.address.fromOutputScript(scriptPubKey, network);
         break;
-      default:
-        address = bitcoin.address.fromOutputScript(redeemScript);
+      case "P2WPKH": // pay to witness public key hash
+        redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+        address = bitcoin.address.fromOutputScript(redeemScript, network);
+        break;
+      case "P2WSH": // pay to witness script hash
+        redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+        scriptPubKey = bitcoin.script.scriptHash.output.encode(bitcoin.crypto.hash160(redeemScript));
+        address = bitcoin.address.fromOutputScript(scriptPubKey, network);
+        break;
+      default: // P2PK - pay to public key
+        address = keyPair.getAddress();
         break;
     }
-
     // return address
     return address;
   } catch(err){
@@ -49,8 +63,7 @@ let recoverAddress = (privateKey, type="native", testnet = false) => {
   }
 };
 
-
-let recoverSeed = (seed, count = 1, type="native", bip="49", testnet = false) => {
+let recoverSeed = (seed, count = 1, type="P2PK", bip="49", testnet = false) => {
   try{
     // check network: bitcoin or testnet
     let network;
@@ -96,26 +109,36 @@ let recoverSeed = (seed, count = 1, type="native", bip="49", testnet = false) =>
       }
       
       let child = root.derivePath(path);
-
       let d = bigi.fromBuffer(child.privateKey);
       let keyPair = new bitcoin.ECPair(d, null, {network: network});
-
       let publicKeyHash = bitcoin.crypto.hash160(child.publicKey);
-      let redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
-      let redeemScriptHash = bitcoin.crypto.hash160(redeemScript);
+
       let address;
+      let redeemScript;
+      let scriptPubKey;
 
       // choose wallet type
       switch (type){
-        case "legacy":
+        case "P2PKH": // pay to public key hash
+          d = bigi.fromBuffer(publicKeyHash);
+          keyPair = new bitcoin.ECPair(d, null, {network: network});
           address = keyPair.getAddress();
           break;
-        case "P2SH":
-          let outputScript = bitcoin.script.scriptHash.output.encode(redeemScriptHash);
-          address = bitcoin.address.fromOutputScript(outputScript);
+        case "P2SH": // pay to script hash
+          scriptPubKey = bitcoin.script.scriptHash.output.encode(publicKeyHash);
+          address = bitcoin.address.fromOutputScript(scriptPubKey, network);
           break;
-        default:
-          address = bitcoin.address.fromOutputScript(redeemScript);
+        case "P2WPKH": // pay to witness public key hash
+          redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+          address = bitcoin.address.fromOutputScript(redeemScript, network);
+          break;
+        case "P2WSH": // pay to witness script hash
+          redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+          scriptPubKey = bitcoin.script.scriptHash.output.encode(bitcoin.crypto.hash160(redeemScript));
+          address = bitcoin.address.fromOutputScript(scriptPubKey, network);
+          break;
+        default: // P2PK - pay to public key
+          address = keyPair.getAddress();
           break;
       }
 
@@ -154,7 +177,7 @@ let validateAddress = (address, testnet = false) => {
   }
 };
 
-let create = (type = "native", testnet = false) => {
+let create = (type = "P2PK", testnet = false) => {
   try{
     // check network: bitcoin or testnet
     let network;
@@ -166,23 +189,39 @@ let create = (type = "native", testnet = false) => {
 
     // create new random key pair of eliptic curves
     let keyPair = bitcoin.ECPair.makeRandom({network: network});
+
+    // public key buffer
     let publicKeyBuffer = keyPair.getPublicKeyBuffer();
+
+    // public key hash
     let publicKeyHash = bitcoin.crypto.hash160(publicKeyBuffer);
-    let redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+
     let address;
+    let redeemScript;
+    let scriptPubKey;
 
     // choose wallet type
     switch (type){
-      case "legacy":
+      case "P2PKH": // pay to public key hash
+        let d = bigi.fromBuffer(publicKeyHash);
+        keyPair = new bitcoin.ECPair(d, null, {network: network});
         address = keyPair.getAddress();
         break;
-      case "P2SH":
-        let redeemScriptHash = bitcoin.crypto.hash160(redeemScript);
-        let scriptPubKey = bitcoin.script.scriptHash.output.encode(redeemScriptHash);
-        address = bitcoin.address.fromOutputScript(scriptPubKey);
+      case "P2SH": // pay to script hash
+        scriptPubKey = bitcoin.script.scriptHash.output.encode(publicKeyHash);
+        address = bitcoin.address.fromOutputScript(scriptPubKey, network);
         break;
-      default:
-        address = bitcoin.address.fromOutputScript(redeemScript);
+      case "P2WPKH": // pay to witness public key hash
+        redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+        address = bitcoin.address.fromOutputScript(redeemScript, network);
+        break;
+      case "P2WSH": // pay to witness script hash
+        redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+        scriptPubKey = bitcoin.script.scriptHash.output.encode(bitcoin.crypto.hash160(redeemScript));
+        address = bitcoin.address.fromOutputScript(scriptPubKey, network);
+        break;
+      default: // P2PK - pay to public key
+        address = keyPair.getAddress();
         break;
     }
 
@@ -199,7 +238,7 @@ let create = (type = "native", testnet = false) => {
   }
 };
 
-let createSeed = (count = 1, type="native", bip="49", testnet = false) => {
+let createSeed = (count = 1, type="P2PK", bip="49", testnet = false) => {
   try{
     // check network: bitcoin or testnet
     let network;
@@ -244,26 +283,36 @@ let createSeed = (count = 1, type="native", bip="49", testnet = false) => {
       }
       
       let child = root.derivePath(path);
-
       let d = bigi.fromBuffer(child.privateKey);
       let keyPair = new bitcoin.ECPair(d, null, {network: network});
-
       let publicKeyHash = bitcoin.crypto.hash160(child.publicKey);
-      let redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
-      let redeemScriptHash = bitcoin.crypto.hash160(redeemScript);
+
       let address;
+      let redeemScript;
+      let scriptPubKey;
 
       // choose wallet type
       switch (type){
-        case "legacy":
+        case "P2PKH": // pay to public key hash
+          d = bigi.fromBuffer(publicKeyHash);
+          keyPair = new bitcoin.ECPair(d, null, {network: network});
           address = keyPair.getAddress();
           break;
-        case "P2SH":
-          let outputScript = bitcoin.script.scriptHash.output.encode(redeemScriptHash);
-          address = bitcoin.address.fromOutputScript(outputScript);
+        case "P2SH": // pay to script hash
+          scriptPubKey = bitcoin.script.scriptHash.output.encode(publicKeyHash);
+          address = bitcoin.address.fromOutputScript(scriptPubKey, network);
           break;
-        default:
-          address = bitcoin.address.fromOutputScript(redeemScript);
+        case "P2WPKH": // pay to witness public key hash
+          redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+          address = bitcoin.address.fromOutputScript(redeemScript, network);
+          break;
+        case "P2WSH": // pay to witness script hash
+          redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+          scriptPubKey = bitcoin.script.scriptHash.output.encode(bitcoin.crypto.hash160(redeemScript));
+          address = bitcoin.address.fromOutputScript(scriptPubKey, network);
+          break;
+        default: // P2PK - pay to public key
+          address = keyPair.getAddress();
           break;
       }
 
@@ -285,7 +334,7 @@ let createSeed = (count = 1, type="native", bip="49", testnet = false) => {
   }
 };
 
-let createBrainWallet = (passphrase, type="native", testnet = false) => {
+let createBrainWallet = (passphrase, type="P2PK", testnet = false) => {
   try{
     // check network: bitcoin or testnet
     let network;
@@ -295,31 +344,42 @@ let createBrainWallet = (passphrase, type="native", testnet = false) => {
       network = bitcoin.networks.bitcoin;
     }
 
-    // create a hass buffer from passphrase
     let passphraseHash = bitcoin.crypto.sha256(safeBuffer.from(passphrase));
-    let hashBuffer = bitcoin.crypto.sha256(passphraseHash);
-    let d = bigi.fromBuffer(hashBuffer);
-
-    // create an eliptic curve
+    let d = bigi.fromBuffer(passphraseHash);
     let keyPair = new bitcoin.ECPair(d, null, {network: network});
 
+    // public key buffer
     let publicKeyBuffer = keyPair.getPublicKeyBuffer();
+
+    // public key hash
     let publicKeyHash = bitcoin.crypto.hash160(publicKeyBuffer);
-    let redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+
     let address;
+    let redeemScript;
+    let scriptPubKey;
 
     // choose wallet type
     switch (type){
-      case "legacy":
+      case "P2PKH": // pay to public key hash
+        d = bigi.fromBuffer(publicKeyHash);
+        keyPair = new bitcoin.ECPair(d, null, {network: network});
         address = keyPair.getAddress();
         break;
-      case "P2SH":
-        let redeemScriptHash = bitcoin.crypto.hash160(redeemScript);
-        let outputScript = bitcoin.script.scriptHash.output.encode(redeemScriptHash);
-        address = bitcoin.address.fromOutputScript(outputScript);
+      case "P2SH": // pay to script hash
+        scriptPubKey = bitcoin.script.scriptHash.output.encode(publicKeyHash);
+        address = bitcoin.address.fromOutputScript(scriptPubKey, network);
         break;
-      default:
-        address = bitcoin.address.fromOutputScript(redeemScript);
+      case "P2WPKH": // pay to witness public key hash
+        redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+        address = bitcoin.address.fromOutputScript(redeemScript, network);
+        break;
+      case "P2WSH": // pay to witness script hash
+        redeemScript = bitcoin.script.witnessPubKeyHash.output.encode(publicKeyHash);
+        scriptPubKey = bitcoin.script.scriptHash.output.encode(bitcoin.crypto.hash160(redeemScript));
+        address = bitcoin.address.fromOutputScript(scriptPubKey, network);
+        break;
+      default: // P2PK - pay to public key
+        address = keyPair.getAddress();
         break;
     }
 
@@ -398,4 +458,3 @@ module.exports = {
   recoverSeed: recoverSeed,
   validateAddress: validateAddress
 };
-

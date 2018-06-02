@@ -8,12 +8,12 @@
 		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
 		<script>
 			// ********************************************************
-			// create a random wallet (segwit native)
-			var wallet = belt.wallet.create();
+			// create a random wallet (P2PK)
+			let wallet = belt.wallet.create();
 			console.log(wallet);
 
 			// validate address
-			var validate = belt.wallet.validateAddress(wallet.address);
+			let validate = belt.wallet.validateAddress(wallet.address);
 			console.log(validate);
 		</script>
 	</body>

@@ -29,7 +29,7 @@ Here is an example:
 let belt = require("bitcoin-utility-belt");
 
 // creating random wallets
-// type: native segwit (default)
+// type: P2PK (default)
 let wallet = belt.wallet.create();
 console.log(wallet);
 ```
@@ -42,7 +42,7 @@ Here is an example:
 <script src="../../dist/bitcoin-utility-belt.min.js"></script>
 <script>
   // creating random wallets
-  // type: native segwit (default)
+  // type: P2PK (default)
   var wallet = belt.wallet.create();
   console.log(wallet);
 </script>
@@ -71,7 +71,7 @@ Some examples interact (via HTTPS) with a 3rd Party Blockchain Provider (3PBP).
 - Sign and Verify Messages [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/message-sign-verify.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/message-sign-verify.js)
 
 ### Wallets
-- Creating Wallets (native segwit, P2SH segwit and legacy) [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-create.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-create.js)
+- Creating Wallets (P2PK, P2PKH, P2SH, P2WPKH and P2WSH) [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-create.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-create.js)
 - Creating Brain Wallet [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-brainwallet.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-brainwallet.js)
 - Creating Seed (bip32 format) [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-create-seed-bip32.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-create-seed-bip32.js)
 - Creating Seed (bip44 format) [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-create-seed-bip44.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-create-seed-bip44.js)

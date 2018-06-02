@@ -70,6 +70,35 @@ let recoverAddress = (privateKey, type="P2PKH", testnet = false) => {
   }
 };
 
+let chooseBipSeed = (bip, count, testnet) => {
+  // choose bip
+  let path;
+  switch (bip){
+    case "32":
+      if(testnet){
+        path = "m/0'/1/0"+count;
+      }else{
+        path = "m/0'/0/0"+count;
+      }
+      break;
+    case "44":
+      if(testnet){
+        path = "m/44'/1'/0'/0/"+count;
+      }else{
+        path = "m/44'/0'/0'/0/"+count;
+      }
+      break;
+    default:
+      if(testnet){
+        path = "m/49'/1'/0'/0/"+count;
+      }else{
+        path = "m/49'/0'/0'/0/"+count;
+      }
+      break;
+  }
+  return path;
+};
+
 let recoverSeed = (seed, count = 1, type="P2PKH", bip="49", testnet = false) => {
   try{
     // check network: bitcoin or testnet
@@ -91,33 +120,16 @@ let recoverSeed = (seed, count = 1, type="P2PKH", bip="49", testnet = false) => 
     let i;
     for (i = 0; i < count; i++) {    
       // choose bip
-      switch (bip){
-        case "32":
-          if(testnet){
-            path = "m/0'/1/0"+i;
-          }else{
-            path = "m/0'/0/0"+i;
-          }
-          break;
-        case "44":
-          if(testnet){
-            path = "m/44'/1'/0'/0/"+i;
-          }else{
-            path = "m/44'/0'/0'/0/"+i;
-          }
-          break;
-        default:
-          if(testnet){
-            path = "m/49'/1'/0'/0/"+i;
-          }else{
-            path = "m/49'/0'/0'/0/"+i;
-          }
-          break;
-      }
-      
+      path = chooseBipSeed(bip, i, testnet);
+
+      // get child
       let child = root.derivePath(path);
+
+      // create new key pair of eliptic curves
       let d = bigi.fromBuffer(child.privateKey);
       let keyPair = new bitcoin.ECPair(d, null, {network: network});
+
+      // public key hash
       let publicKeyHash = bitcoin.crypto.hash160(child.publicKey);
 
       // generate Address
@@ -213,33 +225,16 @@ let createSeed = (count = 1, type="P2PKH", bip="49", testnet = false) => {
     let i;
     for (i = 0; i < count; i++) {    
       // choose bip
-      switch (bip){
-        case "32":
-          if(testnet){
-            path = "m/0'/1/0"+i;
-          }else{
-            path = "m/0'/0/0"+i;
-          }
-          break;
-        case "44":
-          if(testnet){
-            path = "m/44'/1'/0'/0/"+i;
-          }else{
-            path = "m/44'/0'/0'/0/"+i;
-          }
-          break;
-        default:
-          if(testnet){
-            path = "m/49'/1'/0'/0/"+i;
-          }else{
-            path = "m/49'/0'/0'/0/"+i;
-          }
-          break;
-      }
+      path = chooseBipSeed(bip, i, testnet);
       
+      // get child
       let child = root.derivePath(path);
+
+      // create new key pair of eliptic curves
       let d = bigi.fromBuffer(child.privateKey);
       let keyPair = new bitcoin.ECPair(d, null, {network: network});
+
+      // public key hash
       let publicKeyHash = bitcoin.crypto.hash160(child.publicKey);
 
       // generate Address

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Creating and Validating Mnemonic Words - Examples - Bitcoin Utility Belt</title>
+	</head>
+	<body>
+		<!-- Importing Bitcoin Utility Belt script -->
+		<script src="../../dist/bitcoin-utility-belt.min.js"></script>
+		<script>
+			// ********************************************************
+			// generate mnemonic words
+			let mnemonicWords = belt.wallet.generateMnemonic();
+			console.log(mnemonicWords);
+
+			// validate mnemonic words
+			let validateWords = belt.wallet.validateMnemonic(mnemonicWords);
+			console.log(validateWords);
+		</script>
+	</body>
+</html>

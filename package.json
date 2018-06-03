@@ -23,13 +23,20 @@
     "bip39",
     "bip44",
     "bip49",
+    "BTC",
     "bitcoin",
     "bitcoinjs",
     "bitcoinjs-message",
     "blockexplorer",
     "browserify",
+    "cryptocurrency",
     "javascript",
-    "smartbit"
+    "P2PKH",
+    "P2SH",
+    "P2WPKH",
+    "P2WSH",
+    "smartbit",
+    "bitcoin wallets"
   ],
   "files": [
     "src"

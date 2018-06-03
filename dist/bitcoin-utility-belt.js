@@ -95804,6 +95804,7 @@ let faucet = (address, amount, token) => {
   );
 };
 },{"./wallet":441,"bitcoinjs-lib":98,"node-fetch":285,"request":343}],441:[function(require,module,exports){
+(function (Buffer){
 // import libs
 let bitcoin = require("bitcoinjs-lib");
 let bitcoinMessage = require("bitcoinjs-message");
@@ -95837,37 +95838,43 @@ let validateAddress = (address, testnet = false) => {
 };
 
 let checkAddress = (address, testnet = false) => {
-  let type = false;
-  
-  // check network: bitcoin or testnet
-  let network;
-  if(testnet){
-    network = bitcoin.networks.testnet;
-  }else{
-    network = bitcoin.networks.bitcoin;
-  }
-
-  if(validateAddress(address)){ 
-    let addressScript = bitcoin.address.toOutputScript(address, network);
-
-    if(bitcoin.script.pubKeyHash.output.check(addressScript)){
-      type = "P2PKH";
-    }
+  try{
+    let type = false;
     
-    if(bitcoin.script.scriptHash.output.check(addressScript)){
-      type = "P2SH|P2WSH";
+    // check network: bitcoin or testnet
+    let network;
+    if(testnet){
+      network = bitcoin.networks.testnet;
+    }else{
+      network = bitcoin.networks.bitcoin;
     }
 
-    if(bitcoin.script.witnessPubKeyHash.output.check(addressScript)){
-      type = "P2PKH";
+    if(validateAddress(address)){ 
+      let addressScript = bitcoin.address.toOutputScript(address, network);
+
+      if(bitcoin.script.pubKeyHash.output.check(addressScript)){
+        type = "P2PKH";
+      }
+      
+      if(bitcoin.script.scriptHash.output.check(addressScript)){
+        type = "P2SH|P2WSH";
+      }
+
+      if(bitcoin.script.witnessPubKeyHash.output.check(addressScript)){
+        type = "P2PKH";
+      }
     }
+
+    return type;
+  } catch(err){
+    // show error
+    console.error(err);
+    return false;
   }
-
-  return type;
 };
 
 let generateAddress = (type, publicKeyHash, network) => {
-
+  try{
     let address;
     let redeemScript;
     let scriptPubKey;
@@ -95894,6 +95901,71 @@ let generateAddress = (type, publicKeyHash, network) => {
     }
 
     return address;
+  } catch(err){
+    // show error
+    console.error(err);
+    return false;
+  }
+};
+
+let getPublicKeyHex = (privateKey, testnet = false) => {
+  try{
+    // check network: bitcoin or testnet
+    let network;
+    if(testnet){
+      network = bitcoin.networks.testnet;
+    }else{
+      network = bitcoin.networks.bitcoin;
+    }
+
+    // create key pair of eliptic curves
+    let keyPair = bitcoin.ECPair.fromWIF(privateKey, network);
+
+    // public key buffer
+    let publicKeyBuffer = keyPair.getPublicKeyBuffer();
+
+    let publicKeyHex = bitcoin.script.compile(publicKeyBuffer).toString('hex');
+    return publicKeyHex; 
+  } catch(err){
+    // show error
+    console.error(err);
+    return false;
+  }
+};
+
+let createMultiSig = (pubKeys, countSign, type = "P2SH", testnet = false) => {
+  try{
+    // check network: bitcoin or testnet
+    let network;
+    if(testnet){
+      network = bitcoin.networks.testnet;
+    }else{
+      network = bitcoin.networks.bitcoin;
+    }
+
+    let scriptPubKey;
+    let address;
+    let pubKeysHex = pubKeys.map(function (hex) { return Buffer.from(hex, 'hex'); });    
+
+    switch(type){
+      case "P2SH":
+        let redeemScript = bitcoin.script.multisig.output.encode(countSign, pubKeysHex);
+        scriptPubKey = bitcoin.script.scriptHash.output.encode(bitcoin.crypto.hash160(redeemScript));
+        address = bitcoin.address.fromOutputScript(scriptPubKey, network);
+        break;
+      default:
+        let witnessScript = bitcoin.script.multisig.output.encode(countSign, pubKeysHex);
+        scriptPubKey = bitcoin.script.witnessScriptHash.output.encode(bitcoin.crypto.sha256(witnessScript));
+        address = bitcoin.address.fromOutputScript(scriptPubKey, network);
+        break;
+    } 
+    
+    return address;
+  } catch(err){
+    // show error
+    console.error(err);
+    return false;
+  }
 };
 
 let recoverAddress = (privateKey, type="P2PKH", testnet = false) => {
@@ -96195,14 +96267,17 @@ module.exports = {
   create: create,
   createSeed: createSeed,
   createBrainWallet: createBrainWallet,
+  createMultiSig: createMultiSig,
   decrypt: decrypt,
   encrypt: encrypt,
   generateMnemonic: generateMnemonic,
+  getPublicKeyHex: getPublicKeyHex,
   recoverAddress: recoverAddress,
   recoverSeed: recoverSeed,
   validateAddress: validateAddress,
   validateMnemonic: validateMnemonic
 };
 
-},{"assert":62,"bigi":72,"bip32":76,"bip38":77,"bip39":78,"bitcoinjs-lib":98,"bitcoinjs-message":127,"safe-buffer":357,"wif":435}]},{},[438])(438)
+}).call(this,require("buffer").Buffer)
+},{"assert":62,"bigi":72,"bip32":76,"bip38":77,"bip39":78,"bitcoinjs-lib":98,"bitcoinjs-message":127,"buffer":167,"safe-buffer":357,"wif":435}]},{},[438])(438)
 });

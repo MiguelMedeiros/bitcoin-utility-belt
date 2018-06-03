@@ -9,6 +9,57 @@ let bigi = require("bigi");
 let safeBuffer = require("safe-buffer").Buffer;
 let assert = require("assert");
 
+let validateAddress = (address, testnet = false) => {
+  try {
+    // check network: bitcoin or testnet
+    let network;
+    if(testnet){
+      network = bitcoin.networks.testnet;
+    }else{
+      network = bitcoin.networks.bitcoin;
+    }
+
+    // try to output script to validate address
+    bitcoin.address.toOutputScript(address, network);
+
+    // no errors return true
+    return true;
+  } catch (err) {
+    // return false
+    return false;
+  }
+};
+
+let checkAddress = (address, testnet = false) => {
+  let type = false;
+  
+  // check network: bitcoin or testnet
+  let network;
+  if(testnet){
+    network = bitcoin.networks.testnet;
+  }else{
+    network = bitcoin.networks.bitcoin;
+  }
+
+  if(validateAddress(address)){ 
+    let addressScript = bitcoin.address.toOutputScript(address, network);
+
+    if(bitcoin.script.pubKeyHash.output.check(addressScript)){
+      type = "P2PKH";
+    }
+    
+    if(bitcoin.script.scriptHash.output.check(addressScript)){
+      type = "P2SH|P2WSH";
+    }
+
+    if(bitcoin.script.witnessPubKeyHash.output.check(addressScript)){
+      type = "P2PKH";
+    }
+  }
+
+  return type;
+};
+
 let generateAddress = (type, publicKeyHash, network) => {
 
     let address;
@@ -145,27 +196,6 @@ let recoverSeed = (seed, count = 1, type="P2PKH", bip="49", testnet = false) => 
   } catch(err){
     // show error
     console.error(err);
-    return false;
-  }
-};
-
-let validateAddress = (address, testnet = false) => {
-  try {
-    // check network: bitcoin or testnet
-    let network;
-    if(testnet){
-      network = bitcoin.networks.testnet;
-    }else{
-      network = bitcoin.networks.bitcoin;
-    }
-
-    // try to output script to validate address
-    bitcoin.address.toOutputScript(address, network);
-
-    // no errors return true
-    return true;
-  } catch (err) {
-    // return false
     return false;
   }
 };
@@ -355,6 +385,7 @@ let decrypt = (encryptedKey, passphrase, consoleLog = false) => {
 
 // export functions
 module.exports = {
+  checkAddress: checkAddress,
   create: create,
   createSeed: createSeed,
   createBrainWallet: createBrainWallet,

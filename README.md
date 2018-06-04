@@ -87,7 +87,7 @@ I've made HTML and NodeJS examples, so you can understand how it works!
 - Validate Wallet Address [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-validate-address.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-validate-address.js)
 
 ## Examples
-- Random Wallet Generator: [Github Code](https://github.com/MiguelMedeiros/bitcoin-utility-belt-examples/blob/master/wallet-generator.html) [[Live Coding Video]](https://www.youtube.com/watch?v=z2GjZU1cpb8)
+- Random Wallet Generator: [[Github Code]](https://github.com/MiguelMedeiros/bitcoin-utility-belt-examples/blob/master/wallet-generator.html) [[Live Coding Video]](https://www.youtube.com/watch?v=z2GjZU1cpb8)
 
 ## Contributing
 I'll be glad to receive new pull requests to improve this project! Feel free to contribute!

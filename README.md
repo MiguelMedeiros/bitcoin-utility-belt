@@ -31,7 +31,7 @@ Here is an example:
 let belt = require("bitcoin-utility-belt");
 
 // creating random wallets
-// type: P2PK (default)
+// type: P2PKH (default)
 let wallet = belt.wallet.create();
 console.log(wallet);
 ```
@@ -44,7 +44,7 @@ Here is an example:
 <script src="../../dist/bitcoin-utility-belt.min.js"></script>
 <script>
   // creating random wallets
-  // type: P2PK (default)
+  // type: P2PKH (default)
   var wallet = belt.wallet.create();
   console.log(wallet);
 </script>

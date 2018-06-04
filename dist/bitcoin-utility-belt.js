@@ -95515,7 +95515,7 @@ let blocks = (limit = 10, sort = "", dir = "desc", next = "") => {
   if(next){
     url = url+"&next="+next;
   }
-  console.log(url);
+  
   return fetch (url)
   .then(res => res.json())
     .then(json => {
@@ -95626,9 +95626,6 @@ module.exports = {
   transaction: require("./transaction"),
   wallet: require("./wallet")
 };
-
-// add sign transactions (op return option)
-// add multsig wallets
 
 },{"./blockchain":437,"./message":439,"./transaction":440,"./wallet":441}],439:[function(require,module,exports){
 // import libs
@@ -95778,19 +95775,6 @@ let txInfo = [
   }
 ];
 //console.log(create(txInfo));
-
-
-/*var faucet = (address) => {
-  bitcoin.regtestUtils.faucet(getAddress(alice1, bitcoin.networks.testnet), 5e4, function (err, unspent0) {
-      if (err) return done(err)
-    });
-};*/
-//address: 'mnvCwq1VrXCRFhAa1UdMA1Q7pft1zHgR6d',
-//privateKey: 'cV2Fhv54pUWEJmHt9HFGjQyYC93A7n9ukJfxd5unBxe2EnJretFK'
-//console.log(wallet.create("legacy", true));
-//console.log(faucet('mnvCwq1VrXCRFhAa1UdMA1Q7pft1zHgR6d'));
-//console.log(bitcoin);
-//console.log(unspents("mnvCwq1VrXCRFhAa1UdMA1Q7pft1zHgR6d", function(res){console.log(res)}))
 
 let faucet = (address, amount, token) => {
   var data = {address: address, amount: amount};

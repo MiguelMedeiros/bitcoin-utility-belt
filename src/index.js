@@ -5,6 +5,3 @@ module.exports = {
   transaction: require("./transaction"),
   wallet: require("./wallet")
 };
-
-// add sign transactions (op return option)
-// add multsig wallets

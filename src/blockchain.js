@@ -48,7 +48,7 @@ let blocks = (limit = 10, sort = "", dir = "desc", next = "") => {
   if(next){
     url = url+"&next="+next;
   }
-  console.log(url);
+  
   return fetch (url)
   .then(res => res.json())
     .then(json => {

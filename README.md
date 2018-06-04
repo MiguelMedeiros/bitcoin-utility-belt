@@ -9,10 +9,12 @@ I've made this project to make easy to use a lot of Bitcoin functions that you n
   * [NodeJS Installation](#nodejs-installation)
   * [Browser Installation](#browser-installation)
   * [How to compile a new browser version](#how-to-compile-a-new-browser-version)
-  * [Examples](#examples)
+  * [Functions](#functions)
     * [Blockchain](#blockchain-3pbp)
     * [Messages](#messages)
     * [Wallets](#wallets)
+  * [Examples](#examples)
+    * Random Wallet Generator
   * [Contributing](#contributing)
   * [Donate](#donate-btc)
   * [License](#license-mit)
@@ -55,9 +57,10 @@ But if you want to compile for your self run the script:
 npm run build
 ```
 
-## Examples
-The below examples should be very easy to understand.  
-Some examples interact (via HTTPS) with a 3rd Party Blockchain Provider (3PBP).
+## Functions
+The list below should be very easy to understand. 
+Some of them interact (via HTTPS) with a 3rd Party Blockchain Provider (3PBP).
+I've made HTML and NodeJS examples, so you can understand how it works!
 
 ### Blockchain (3PBP)
 - Get Address Info [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/blockchain-address-info.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/blockchain-address-info.js)
@@ -82,6 +85,9 @@ Some examples interact (via HTTPS) with a 3rd Party Blockchain Provider (3PBP).
 - Recover Address from Private Key (WIF format) [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-recover-address.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-recover-address.js)
 - Recover Wallets from Seed [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-recover-seed.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-recover-seed.js)
 - Validate Wallet Address [[HTML example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/html/wallet-validate-address.html) [[NodeJS example]](https://github.com/MiguelMedeiros/bitcoin-utility-belt/blob/master/examples/nodejs/wallet-validate-address.js)
+
+## Examples
+- Random Wallet Generator: [Github Code](https://github.com/MiguelMedeiros/bitcoin-utility-belt-examples/blob/master/wallet-generator.html) [[Live Coding Video]](https://www.youtube.com/watch?v=z2GjZU1cpb8)
 
 ## Contributing
 I'll be glad to receive new pull requests to improve this project! Feel free to contribute!

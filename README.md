@@ -88,6 +88,7 @@ I've made HTML and NodeJS examples, so you can understand how it works!
 
 ## Examples
 - Random Wallet Generator: [[Github Code]](https://github.com/MiguelMedeiros/bitcoin-utility-belt-examples/blob/master/wallet-generator.html) [[Live Coding Video]](https://www.youtube.com/watch?v=z2GjZU1cpb8)
+- Brain Wallet Generator: [[Github Code]](https://github.com/MiguelMedeiros/bitcoin-utility-belt-examples/blob/master/brainwallet-generator.html) [[Live Coding Video]](https://www.youtube.com/watch?v=7Iqsl9C1g-4)
 
 ## Contributing
 I'll be glad to receive new pull requests to improve this project! Feel free to contribute!
